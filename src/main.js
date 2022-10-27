@@ -1,9 +1,8 @@
 import Vue from "vue";
 import App from "@/App.vue";
 import firebase from "firebase";
-// import * as firebase from "firebase/app";
-// import firebase from "firebase/app";
 import "firebase/auth";
+import router from "@/router";
 
 Vue.config.productionTip = false;
 
@@ -22,5 +21,6 @@ firebase.initializeApp(firebaseConfig);
 export default firebase;
 
 new Vue({
+  router,
   render: (h) => h(App),
 }).$mount("#app");
