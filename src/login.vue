@@ -1,16 +1,10 @@
 <template>
   <div id="app">
-    <h2>ユーザ登録画面</h2>
+    
     <button @click="logout">ログアウト</button>
-
-    <div>
-      <p>メールアドレス:</p>
-      <input type="text" id="email" v-model="mail" />
-      <p>パスワード:</p>
-      <input type="text" id="pass" v-model="password" />
-    </div>
-    <button type="submit" @click="register">登録する</button>
-
+    <p>
+      <router-link :to="{ name: 'chat' }"> ログインページ </router-link>
+    </p>
     <h2>ログイン画面</h2>
     <div class="form-group">
       <p>メールアドレス:</p>
