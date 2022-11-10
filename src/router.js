@@ -19,5 +19,10 @@ export default new Router({
       component: () => import("./chatPage.vue"),
       name: "chat",
     },
+    {
+      path: "/register",
+      component: () => import("./register.vue"),
+      name: "register",
+    },
   ],
 });
