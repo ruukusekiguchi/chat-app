@@ -3,13 +3,15 @@
     <div>
       <h1>チャットページ</h1>
       <p><router-link :to="{ name: 'top' }"> ログインページ </router-link></p>
-      <!-- <h2>ログイン画面</h2> -->
       <input type="text" v-model="message" />
-      <button @click="login">ログインする</button>
+      <button @click="login">送信</button>
     </div>
-
-    <table hover :items="items"></table>
-    <!-- <p>{{ this.items }}</p> -->
+    <!-- {{ list }} -->
+    <!-- <table hover :items="items"></table> -->
+    <p v-for="(data, index) in items" :key="index">
+      {{ data.text }} <br />
+      {{ data.uid }}
+    </p>
   </div>
 </template>
 
@@ -23,43 +25,47 @@ export default {
       message: "",
       loginEmail: "",
       loginPassword: "",
-      items: [],
+      items: {},
     };
   },
+  created() {
+    this.get();
+  },
   methods: {
-    login() {
-      //db取得
+    get() {
       firebase
         .firestore()
         .collection("colection")
+        .orderBy("timestamp", "desc")
         .get()
         .then((response) => {
           const list = {};
 
-          this.date = new Date();
-          // this.date.getFullYear();
-          // this.date.getMonth();
-          // this.date.getDate();
-
           response.forEach((doc) => {
             const docId = doc.id;
             list[docId] = doc.data();
-            this.items = [doc.data()];
           });
-          // console.log(list[docId]);
           console.log(list);
+          this.items = list;
         });
+    },
 
-      // var message ={
-      //   item:this.list[0]
-      // };
-
+    login() {
       //db登録処理
       firebase
         .firestore()
         .collection("colection")
         .doc()
-        .set({ text: this.message, timestamp: "" });
+        .set({
+          text: this.message,
+          timestamp: firebase.firestore.Timestamp.now(),
+          uid: firebase.auth().currentUser
+            ? firebase.auth().currentUser.uid
+            : "",
+        })
+        .then(() => {
+          this.get();
+        });
     },
     logout() {
       firebase.auth().signOut();
@@ -71,7 +77,7 @@ export default {
 
 <style>
 #app {
-  display: flex;
-  justify-content: center;
+  /* display: flex;
+  justify-content: center; */
 }
 </style>

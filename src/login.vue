@@ -57,9 +57,9 @@ export default {
 };
 </script>
 
-<style>
+<style type="module">
 #app {
-  display: flex;
-  justify-content: center;
+  /* display: flex;
+  justify-content: center; */
 }
 </style>
