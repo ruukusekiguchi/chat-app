@@ -20,6 +20,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 export default firebase;
 
+
 new Vue({
   router,
   render: (h) => h(App),

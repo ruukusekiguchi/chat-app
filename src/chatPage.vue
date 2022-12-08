@@ -9,8 +9,10 @@
     <!-- {{ list }} -->
     <!-- <table hover :items="items"></table> -->
     <p v-for="(data, index) in items" :key="index">
-      {{ data.text }} <br />
-      {{ data.uid }}
+      <!-- ifの省略形 -->
+      {{ data.username ? data.username : data.uid ? data.uid : "匿名さん"
+      }}<br />
+      {{ data.text }}
     </p>
   </div>
 </template>
@@ -25,10 +27,14 @@ export default {
       message: "",
       loginEmail: "",
       loginPassword: "",
+      uid: "",
+      userdata: {},
       items: {},
     };
   },
   created() {
+    this.getuid();
+    this.users();
     this.get();
   },
   methods: {
@@ -49,6 +55,22 @@ export default {
           this.items = list;
         });
     },
+    getuid() {
+      this.uid = firebase.auth().currentUser
+        ? firebase.auth().currentUser.uid
+        : "";
+    },
+    users() {
+      firebase
+        .firestore()
+        .collection("user")
+        .doc(this.uid)
+        .get()
+        .then((response) => {
+          console.log(response.data());
+          this.userdata = response.data();
+        });
+    },
 
     login() {
       //db登録処理
@@ -62,6 +84,7 @@ export default {
           uid: firebase.auth().currentUser
             ? firebase.auth().currentUser.uid
             : "",
+          username: this.userdata.name,
         })
         .then(() => {
           this.get();
